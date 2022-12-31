@@ -1,27 +1,31 @@
-import numpy as np
+from typing import List
 from si.src.si.data.dataset import Dataset
 from si.src.si.metrics.accuracy import accuracy
+import numpy as np
 
 
 class StackingClassifier:
-
-    def __init__(self, models: list, final_model: Callable):
+    def __init__(self, models: List[object], final_model: object) -> None:
         self.models = models
         self.final_model = final_model
 
     def fit(self, dataset: Dataset) -> "StackingClassifier":
-        for model in self.models:  # fit the ensemble models
-            model.fit(dataset)
+        for model in self.models:
+            model.fit(dataset)  # treina os modelos
 
-        predictions = np.array([model.predict(dataset) for model in self.models])
-        self.final_model.fit(Dataset(np.transpose(predictions),dataset.y))
+        predictions = []
+        for model in self.models:
+            predictions.append(model.predict(dataset))  # obtem  as previsões para cada modelo
+        self.final_model.fit(Dataset(dataset.X, np.array(predictions).T)) # treina os modelo final
         return self
 
-    def predict(self, dataset: Dataset) -> np.ndarray:
-        predictions = np.array(
-            [model.predict(dataset) for model in self.models])
-        final_predict = self.final_model.predict(Dataset(np.transpose(predictions), dataset.y))
-        return final_predict
+    def predict(self, dataset: Dataset) -> np.array:
+        predictions = []
+        for model in self.models:
+            predictions.append(model.predict(dataset))
+        y_pred_final = self.final_model.predict(Dataset(dataset.X, np.array(predictions).T))
+        return y_pred_final
 
     def score(self, dataset: Dataset) -> float:
-        return round(accuracy(dataset.y, self.predict(dataset)), 4)
+        y_pred = self.predict(dataset)
+        return accuracy(dataset.y, y_pred)
