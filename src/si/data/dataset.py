@@ -196,7 +196,7 @@ class Dataset:
 
 #Exercício 2
     def dropna(self):
-        new_data = data[~np.isnan(data)]
+        new_data = data[~np.isnan(self.X)]
 
     def fillna(self, value):
         self.X = np.nan_to_num(self.X, nan = value) #substitui os NaN por o valor passado no "value"

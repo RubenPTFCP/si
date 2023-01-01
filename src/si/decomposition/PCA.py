@@ -1,5 +1,6 @@
 import numpy as np
 from si.src.si.data.dataset import Dataset
+import pandas as pd
 
 class PCA:
     def __init__(self, n_components: int):
@@ -27,11 +28,8 @@ class PCA:
         return self.transform()
 
 if __name__ == "__main__":
-    dataset = Dataset(X=np.array([[0, 2, 0, 3],
-                                  [0, 1, 4, 3],
-                                  [0, 1, 1, 3]]),
-                      y=np.array([0, 1, 0]),
-                      features=["f1", "f2", "f3", "f4"],
-                      label="y")
+    import pandas as pd
+    dataset= pd.read_csv("C:\\Users\\ruben\\PycharmProjects\\SI\\si\\datasets\\iris.csv")
     pca = PCA(n_components=2)
     print(pca.fit_transform(dataset=dataset))
+
