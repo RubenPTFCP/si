@@ -30,8 +30,10 @@ class KNNRegressor:
         return rmse(dataset.y, prediction)
 
 if __name__ == '__main__':
+    from si.src.si.model_selection.split import train_test_split
     ds = read_csv("C:\\Users\\ruben\\PycharmProjects\\SI\\si\\datasets\\cpu.csv", ",", features = True, label = True)
-    knn = KNNRegressor(k=5)
-    knn.fit(dataset=ds)
-    s = knn.score(dataset=ds)
+    ds_train, ds_test = train_test_split(ds, test_size=0.2)
+    knn = KNNRegressor(k=4)
+    knn.fit(dataset=ds_train)
+    s = knn.score(dataset=ds_test)
     print("A precisão do modelo é", s)
